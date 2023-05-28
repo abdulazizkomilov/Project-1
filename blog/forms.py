@@ -1,11 +1,9 @@
 from django import forms
-from .models import User
+from .models import User, Comment, Post
 from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-
-
-
+from django.forms import ModelForm, TextInput
 
 class SignupForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -33,3 +31,12 @@ class SignupForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body','parent']
+        widgets = {
+            'body' : TextInput(),
+        }
