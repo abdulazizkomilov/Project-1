@@ -13,6 +13,7 @@ class User(AbstractUser):
     avatar = models.ImageField(null=True, blank=True)
     followers = models.ManyToManyField('User', blank=True)
     exclude_posts = models.ManyToManyField('Post', blank=True)
+    follow = models.ManyToManyField('Category', related_name='follow', blank=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
@@ -52,7 +53,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    room = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     body = models.TextField(blank=True, null=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     updated = models.DateTimeField(auto_now=True)
