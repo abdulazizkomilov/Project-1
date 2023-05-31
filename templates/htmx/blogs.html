@@ -1,0 +1,160 @@
+{% include 'navbar.html' %}
+
+
+<div class="container mb-md-4">
+    <div class="row">
+        <div class="d-none d-sm-block col-lg-2 col-md-1 mb-md-0 mb-4 mt-md-n5">
+            <!-- Sharing-->
+            <div class="sticky-top py-md-5 mt-md-5">
+                <div class="d-flex flex-md-column align-items-center my-2 mt-md-4 pt-md-5">
+
+                    <div class="pb-2 mb-2 me-2 flex-shrink-0 fw-bold">Popular sections:</div>
+                    <div class="d-flex verflow-auto pb-2 mb-4">
+                        <div class="ms-3"><a class="btn btn-xs btn-outline-secondary rounded-pill fw-normal mb-2 me-2"
+                                href="#">Notifications</a><a
+                                class="btn btn-xs btn-outline-secondary rounded-pill fw-normal mb-2 me-2"
+                                href="#">Getting started</a><a
+                                class="btn btn-xs btn-outline-secondary rounded-pill fw-normal mb-2 me-2"
+                                href="#">Transactions</a><a
+                                class="btn btn-xs btn-outline-secondary rounded-pill fw-normal mb-2 me-2"
+                                href="#">Account questions</a><a
+                                class="btn btn-xs btn-outline-secondary rounded-pill fw-normal mb-2 me-2"
+                                href="#">Mortgage</a><a
+                                class="btn btn-xs btn-outline-secondary rounded-pill fw-normal mb-2 me-2"
+                                href="#">Guides</a></div>
+                    </div>
+
+                    <div class="pb-2 mb-2 me-2 flex-shrink-0 fw-bold">
+                        <h3 class="h6">Jump to</h3><a class="nav-link py-1 px-0 fs-sm fw-normal" data-scroll
+                            href="#badge-contextual">Contextual variations</a><a
+                            class="nav-link py-1 px-0 fs-sm fw-normal" data-scroll href="#badge-translucent">Translucent
+                            badges</a><a class="nav-link py-1 px-0 fs-sm fw-normal" data-scroll href="#badge-pill">Pill
+                            badges</a><a class="nav-link py-1 px-0 fs-sm fw-normal" data-scroll
+                            href="#badge-heading">Inside heading</a><a class="nav-link py-1 px-0 fs-sm fw-normal"
+                            data-scroll href="#badge-button">Inside button</a><a
+                            class="nav-link py-1 px-0 fs-sm fw-normal" data-scroll href="#badge-list-group">Inside list
+                            group</a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-8 col-md-10">
+
+            <div class="container mt-4 mb-md-4 py-5">
+                <nav class="mb-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a hx-get="{% url 'blog:home' %}" hx-target="#menucont" hx-push-url="true">
+                                Home
+                            </a>
+                        </li>
+                        <li class="text-primary active" aria-current="page">
+                            <i class="bi bi-arrow-right-short"></i> Blogs
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Articles grid-->
+                <div class="col-lg-12 col-md-10">
+                    {% for post in posts %}
+                    <div class="card card-hover card-horizontal border-0 mb-5">
+                        <div class="card-img-top position-relative" style="background-image: url({{post.image.url}});">
+                            <div class="position-absolute end-0 top-0 pt-3 pe-3 zindex-5">
+                                {% if request.user in post.like.all %}
+                                <a class="btn btn-icon btn-light btn-xs text-primary rounded-circle"
+                                    hx-post="{% url 'blog:like_dislike' post.id %}" hx-target="#menucont">
+                                    <i class="fa-solid fa-heart text-red"></i>
+                                </a>
+                                {% else %}
+                                <a class="btn btn-icon btn-light btn-xs text-primary rounded-circle"
+                                    hx-post="{% url 'blog:like_dislike' post.id %}" hx-target="#menucont">
+                                    <i class="fa-regular fa-heart text-red"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body position-relative pb-1">
+                            <span class="badge bg-faded-accent">Accent</span>
+                            <h3 class="h5 mb-2 fw-bold">
+                                <a class="nav-link" hx-get="{% url 'blog:single' post.name post.slug %}"
+                                    hx-target="#menucont" hx-push-url="true">
+                                    {{ post.name|title }}
+                                </a>
+                            </h3>
+                            <p class="mb-2 fs-sm text-dark">{{ post.summary }}</p>
+                            <div
+                                class="d-flex align-items-center justify-content-center justify-content-sm-start pt-3 pb-2 mt-3 text-nowrap">
+                                <span class="badge rounded-pill bg-secondary me-3">{{ post.topic }}</span>
+                                <span class="badge bg-light me-3">{{ post.created|date:'M-d' }}</span>
+                                {% if post not in request.user.exclude_posts.all %}
+                                <a class="d-inline-block me-4 fs-sm"
+                                    hx-post="{% url 'blog:post_remove_add' post.id %}" hx-target="#menucont">
+                                    <i class="bi bi-dash-circle fs-lg text-dark"></i>
+                                </a>
+                                {% endif %}
+                                {% if request.user in post.favourites.all %}
+                                <a class="d-inline-block fs-sm me-3"
+                                    hx-post="{% url 'blog:favourite_add' post.id %}" hx-target="#menucont">
+                                    <i class="fa-solid fa-bookmark fs-lg text-dark"></i>
+                                </a>
+                                {% else %}
+                                <a class="d-inline-block fs-sm me-3"
+                                    hx-post="{% url 'blog:favourite_add' post.id %}" hx-target="#menucont">
+                                    <i class="fa-regular fa-bookmark fs-lg text-dark"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination-->
+                <nav class="pt-4 pb-2 border-top" aria-label="Blog pagination">
+                    <ul class="pagination mb-0">
+                        <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 8</span></li>
+                        <li class="page-item active d-none d-sm-block" aria-current="page"><span
+                                class="page-link">1<span class="visually-hidden">(current)</span></span></li>
+                        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item d-none d-sm-block">...</li>
+                        <li class="page-item d-none d-sm-block"><a class="page-link" href="#">8</a></li>
+                        <li class="page-item"><a class="page-link" href="#" aria-label="Next"><i
+                                    class="fi-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+
+
+            </div>
+
+
+        </div>
+        <div class="d-none d-sm-block col-lg-2 col-md-1 mb-md-0 mb-4 mt-md-n5">
+            <!-- Sharing-->
+            <div class="sticky-top py-md-5 mt-md-5">
+                <div class="d-flex flex-md-column align-items-center my-2 mt-md-4 pt-md-5">
+
+                    <a class="btn btn-icon btn-light-primary btn-xs shadow-sm rounded-circle mb-md-2 me-md-0 me-2"
+                        href="#">
+                        <i class="bi bi-github"></i>
+                    </a>
+                    <a class="btn btn-icon btn-light-primary btn-xs shadow-sm rounded-circle mb-md-2 me-md-0 me-2"
+                        href="#">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a class="btn btn-icon btn-light-primary btn-xs shadow-sm rounded-circle mb-md-2 me-md-0 me-2"
+                        href="#">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
