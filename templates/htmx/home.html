@@ -1,0 +1,46 @@
+{% include 'navbar.html' %}
+
+<section class="container position-relative pt-5 mt-5 zindex-1">
+    <div class="text-center py-sm-4 py-md-4">
+        <h2 class="pb-4">Let's learn and practice!</h2>
+    </div>
+</section>
+
+<section class="container">
+    <div class="tns-carousel-wrapper tns-controls-outside-xxl tns-nav-outside tns-nav-outside-flush mx-n2">
+        <div class="tns-carousel-inner row gx-4 mx-0 pt-3 pb-4"
+            data-carousel-options="{&quot;items&quot;: 4, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:2},&quot;500&quot;:{&quot;items&quot;:2},&quot;768&quot;:{&quot;items&quot;:3},&quot;992&quot;:{&quot;items&quot;:4}}}">
+            {% for category in categories %}
+            <div class="col">
+                <div class="card shadow-sm card-hover border-0 h-100">
+                    <div class="card-img-top card-img-hover">
+                        <img src="{{category.image.url}}" alt="Image">
+                    </div>
+                    <div class="card-body position-relative">
+                        <h3 class="h6 mb-2 fs-base">
+                            <span class="d-table badge bg-primary">{{category.name}}</span>
+                        </h3>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mx-3 p-3 text-nowrap">
+                        {% if category in request.user.follow.all %}
+                        <a class="btn btn-primary d-inline-block mx-1 px-2 fs-sm"
+                        hx-post="{% url 'blog:unfollow' category.id %}"
+                        hx-target="#menucont">
+                            Unfollow
+                        </a>
+                        {% else %}
+                        <a class="btn btn-outline-primary d-inline-block mx-1 px-2 fs-sm"
+                        hx-post="{% url 'blog:follow' category.id %}"
+                        hx-target="#menucont">
+                            Follow
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% include 'footer.html' %}
