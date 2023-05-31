@@ -1,0 +1,49 @@
+{% include 'navbar.html' %}
+{% load crispy_forms_tags %}
+<main class="page-wrapper">
+    <div id="content" class="container-fluid d-flex h-100 align-items-center justify-content-center py-4 py-sm-5 mt-5">
+        <div class="card card-body" style="max-width: 940px"><a
+                class="position-absolute top-0 end-0 nav-link fs-sm py-1 px-2 mt-3 me-3" href="#"
+                onclick="window.history.go(-1); return false;"><i class="bi bi-backspace me-2"></i> Go
+                back</a>
+            <div class="row mx-0 align-items-center">
+                <div class="col-md-6 border-end-md p-2 p-sm-5">
+                    <div class="mt-sm-4 pt-md-3">Already have an account? 
+                        <a class="primary"
+                            hx-post="{% url 'blog:login' %}"
+                            hx-target="#menucont"
+                            hx-push-url="true">
+                            Sign in
+                        </a>
+                    </div>
+                    <img class="d-block mx-auto" src="/static/image/signup.svg" width="344" alt="">
+
+                </div>
+                <div class="col-md-6 px-2 pt-2 pb-4 px-sm-5 pb-sm-5 pt-md-5"><a class="btn btn-outline-info w-100 mb-3"
+                        href="#"><i class="bi bi-google me-2"></i> Sign Up with Google</a><a
+                        class="btn btn-outline-info w-100 mb-3" href="#"><i class="bi bi-facebook me-2"></i> Sign Up
+                        with Facebook</a>
+                    <div class="d-flex align-items-center py-3 mb-3">
+                        <hr class="w-100">
+                        <div class="px-3">Or</div>
+                        <hr class="w-100">
+                    </div>
+                    <form action="" method="post" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+                        {{form|crispy }}
+
+                        <a class="btn btn-primary btn-lg w-100"
+                            hx-post="{% url 'blog:sign_up' %}"
+                            hx-target="#menucont"
+                            hx-push-url="true">
+                            Sign Up
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include 'footer.html' %}
