@@ -1,0 +1,372 @@
+{% include 'navbar.html' %}
+{% load crispy_forms_tags %}
+
+<button class="btn btn-icon btn-light rounded-circle shadow position-fixed top-50 end-0 translate-middle-y me-3"
+    type="button" data-bs-toggle="tooltip" data-bs-placement="left" style="z-index: 1035;">
+    <span
+        class="d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100 rounded-circle"
+        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <i class="bi bi-chat-dots"></i>
+    </span>
+</button>
+
+<div class="container mt-5 mb-md-4 py-5">
+    
+    <div class="row">
+        <div class="col-lg-2 col-md-1 mb-md-0 mb-4 mt-md-n5">
+            <!-- Sharing-->
+            <div class="sticky-top py-md-5 mt-md-5">
+                <div class="d-flex flex-md-column align-items-center my-2 mt-md-4 pt-md-5">
+                    <div class="d-md-none fw-bold text-nowrap me-2 pe-1">Share:</div>
+                    <a class="btn btn-icon btn-light-primary btn-xs shadow-sm rounded-circle mb-md-2 me-md-0 me-2"
+                        href="#">
+                        <i class="bi bi-github"></i>
+                    </a>
+                    <a class="btn btn-icon btn-light-primary btn-xs shadow-sm rounded-circle mb-md-2 me-md-0 me-2"
+                        href="#">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a class="btn btn-icon btn-light-primary btn-xs shadow-sm rounded-circle mb-md-2 me-md-0 me-2"
+                        href="#">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-10">
+            <nav class="mb-3 pt-md-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a hx-get="{% url 'blog:home' %}" hx-target="#menucont" hx-push-url="true">
+                            Home
+                        </a>
+                    </li>
+                    <li class="" aria-current="page">
+                        <a hx-get="{% url 'blog:blogs' %}" hx-target="#menucont" hx-push-url="true">
+                            <i class="bi bi-arrow-right-short"></i> Blogs
+                        </a>
+                    </li>
+                    <li class="text-primary active" aria-current="page">
+                        <i class="bi bi-arrow-right-short"></i> {{ post.name|title }}
+                    </li>
+                </ol>
+            </nav>
+            <a class="nav-link d-inline-block fw-normal px-0 mb-2" href="#">
+                {{ post.topic.name }}
+            </a>
+            <h1 class="h2 mb-4">{{ post.name|title }}</h1>
+            <div class="mb-4 pb-1">
+                <ul class="list-unstyled d-flex flex-wrap mb-0 text-nowrap">
+                    <li class="me-3">
+                        <i class="bi bi-calendar-event me-2"></i>{{ post.created|date:'M-d' }}
+                    </li>
+                    <li class="me-3 border-end"></li>
+                    <li class="me-3">
+                        <i class="bi bi-clock me-2"></i>{{ post.created|timesince }} read
+                    </li>
+                    <li class="me-3 border-end"></li>
+                    <li class="me-3">
+                        <a class="nav-link-muted" href="#comments" data-scroll>
+                            <i class="bi bi-chat-dots me-2"></i>{{comments_count}} comments
+                        </a>
+                    </li>
+                    <li class="me-3 border-end"></li>
+                    <li>{{ post.like.all.count }}
+                        {% if request.user in post.like.all %}
+                        <a class="text-primary ms-3 rounded-circle"
+                            hx-post="{% url 'blog:like_dislike' post.id %}" hx-target="#menucont">
+                            <i class="fa-solid fa-heart fa-xl text-red"></i>
+                        </a>
+                        {% else %}
+                        <a class="text-primary ms-3 rounded-circle"
+                            hx-post="{% url 'blog:like_dislike' post.id %}" hx-target="#menucont">
+                            <i class="fa-regular fa-heart fa-xl text-red"></i>
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-2 pb-md-3">
+                <img class="rounded-3" src="{{ post.image.url }}" alt="Post image">
+            </div>
+            <!-- Author-->
+            <div class="mb-2 pb-md-3">
+                <a class="d-flex align-items-center text-body text-decoration-none" href="#">
+                    <img class="rounded-circle" src="/media/01.jpg" width="40">
+                    <div class="ps-3">
+                        <h6 class="mb-1">{{ post.host }}</h6><span class="fs-sm">Imperial Property Group Agent</span>
+                    </div>
+                </a>
+            </div>
+            <!-- Post content-->
+            <h6>{{ post.summary }}.</h6>
+            <blockquote class="blockquote"></blockquote>
+            <p>{{ post.discription }}</p>
+            <p>Convallis massa nunc, tempus eget egestas sollicitudin mauris. Purus donec sed neque arcu, dictumst
+                tortor nisi, odio. A sit lectus sem velit orci, rhoncus pharetra facilisis. Cras sodales a, dui
+                pellentesque enim odio rutrum leo. Auctor viverra sit sit ut. Massa, elit venenatis, ultrices viverra at
+                sagittis, velit. Cursus tempus phasellus consectetur suspendisse a blandit pellentesque diam neque.
+                Massa est nibh congue elit amet, diam faucibus. Morbi non est semper ullamcorper quam iaculis at.</p>
+
+            <!-- Post tags-->
+            <div class="d-flex align-items-center my-md-5 my-4 py-md-4 py-3 border-top">
+                <div class="fw-bold text-nowrap mb-2 me-2 pe-1">Tags:</div>
+                <div class="d-flex flex-wrap"><a
+                        class="btn btn-xs btn-outline-secondary rounded-pill fs-sm fw-normal me-2 mb-2"
+                        href="#">Tutorial</a><a
+                        class="btn btn-xs btn-outline-secondary rounded-pill fs-sm fw-normal me-2 mb-2"
+                        href="#">Jobs</a><a class="btn btn-xs btn-outline-secondary rounded-pill fs-sm fw-normal mb-2"
+                        href="#">Business</a></div>
+            </div>
+
+            <!-- Comments-->
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-4 mb-md-5" id="comments">
+                                <h3 class="mb-4 pb-2">{{comments_count}} comments</h3>
+                                <!-- Comment-->
+                                <div class="border-bottom pb-4 mb-4">
+                                    <p>{{ comment.body }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center pe-2">
+                                            <img class="rounded-circle me-1" src="/media/01.jpg" width="40" alt="">
+                                            <div class="ps-2">
+                                                <h6 class="fs-base mb-0">Daniel Adams</h6><span
+                                                    class="text-muted fs-sm">3
+                                                    days
+                                                    ago</span>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-link btn-sm" type="button">
+                                            <i class="bi bi-reply"></i>
+                                            <span class="fw-normal">Reply</span>
+                                        </button>
+                                    </div>
+                                    <!-- Reply to comment-->
+                                    <div class="border-start border-4 ps-4 ms-4 mt-4">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                            tempor
+                                            incididunt ut
+                                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                            exercitation.</p>
+                                        <div class="d-flex align-items-center pe-2"><img class="rounded-circle me-1"
+                                                src="img/avatars/06.jpg" width="48" alt="Kristin Watsons">
+                                            <div class="ps-2">
+                                                <h6 class="fs-base mb-0">Kristin Watsons<span
+                                                        class="badge bg-info rounded-pill fs-xs ms-2">Author</span></h6>
+                                                <span class="text-muted fs-sm">2 days ago</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Comment-->
+                                <div class="pb-4">
+                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                        doloremque
+                                        laudantium,
+                                        totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                                        architecto
+                                        beatae vitae
+                                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur
+                                        aut
+                                        odit aut
+                                        fugit.</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center pe-2"><img class="rounded-circle me-1"
+                                                src="img/avatars/04.jpg" width="48" alt="Darrel Steward">
+                                            <div class="ps-2">
+                                                <h6 class="fs-base mb-0">Darrel Steward</h6><span
+                                                    class="text-muted fs-sm">1
+                                                    week
+                                                    ago</span>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-link btn-sm" type="button"><i
+                                                class="fi-reply fs-lg me-2"></i><span
+                                                class="fw-normal">Reply</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="card-header pb-0 border-0">
+                                    <h4>{{comments_count}} comments</h4>
+                                </div>
+                                <div class="card-body">
+                                    {% for comment in comments %}
+                                    {% if comment.is_parent %}
+                                    <div class="pb-4">
+                                        {% if comment.user.avatar %}
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center pe-2">
+                                                <img class="rounded-circle me-1" src="/media/01.jpg" width="40" alt="">
+                                                <div class="ps-2">
+                                                    <h6 class="fs-base mb-0">Daniel Adams</h6><span
+                                                        class="text-muted fs-sm">3
+                                                        days
+                                                        ago</span>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-link btn-sm" type="button">
+                                                <i class="bi bi-reply"></i>
+                                                <a class="bg-light rounded-2 p-1 text-primary" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseExample{{comment.id}}" aria-expanded="false"
+                                                aria-controls="collapseExample">Reply</a>
+                                            </button>
+                                        </div>
+                                        {% else %}
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center pe-2">
+                                                <img class="rounded-circle me-1" src="/media/01.jpg" width="40" alt="">
+                                                <div class="ps-2">
+                                                    <h6 class="fs-base mb-0">Daniel Adams</h6><span
+                                                        class="text-muted fs-sm">3
+                                                        days
+                                                        ago</span>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-link btn-sm" type="button">
+                                                <i class="bi bi-reply"></i>
+                                                <a class="bg-light rounded-2 p-1 text-primary" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseExample{{comment.id}}" aria-expanded="false"
+                                                aria-controls="collapseExample">Reply</a>
+                                            </button>
+                                        </div>
+                                        {% endif %}
+                                        <div class="mt-4 border-start">
+                                            <p class="ms-2">asdf</p>
+                                            <div class="collapse border-top p-1" id="collapseExample{{comment.id}}">
+                                                {% if request.user.is_authenticated %}
+                                                <form action="" method="POST" id="main_form" class="form-control">
+                                                    {% csrf_token %}
+                                                    <div>
+                                                        <label for="comment">Reply here</label>
+                                                        <input type="text" name="body"> <input type="hidden"
+                                                            value="{{ comment.pk }}" name="parent">
+                                                        <input type="submit" value="reply">
+                                                    </div>
+                                                </form>
+                                                {% else %}
+                                                <p>Please login than add reply. <a href="{% url 'blog:login' %}">Login page</a></p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        {%comment%}
+                                        <div class="mb-2 d-sm-flex">
+                                            <h6 class="m-0 me-2">
+                                                <a href="">
+                                                    @{{comment.user}}
+                                                </a>
+                                            </h6>
+                                            <span class="me-3 small">{{comment.created|timesince}} </span>
+                                        </div>
+                                        <p>{{comment.body}}</p>
+                                        <p>
+                                            <a class="bg-light rounded-2 p-1 text-body" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseExample{{comment.id}}" aria-expanded="false"
+                                                aria-controls="collapseExample">
+                                                reply
+                                            </a>
+                                        </p>
+                                        <div class="collapse" id="collapseExample{{comment.id}}">
+                                            {% if request.user.is_authenticated %}
+                                            <form action="" method="POST" id="main_form" class="form-control">
+                                                {% csrf_token %}
+                                                <div>
+                                                    <label for="comment">Reply here</label>
+                                                    <input type="text" name="body"> <input type="hidden"
+                                                        value="{{ comment.pk }}" name="parent">
+                                                    <input type="submit" value="reply">
+                                                </div>
+                                            </form>
+                                            {% else %}
+                                            <p>Please login than add reply. <a href="{% url 'blog:login' %}">Login page</a></p>
+                                            {% endif %}
+                                        </div>
+                                        {%endcomment%}
+                                    </div>
+                                    {% endif %}
+                
+                                    {% for replies in comment.getReplies %}
+                                    <div class="d-flex ps-3 ps-md-5">
+                                        {% if replies.user.avatar %}
+                                        <div class="avatar avatar-xs me-3">
+                                            <a href="">
+                                                <img class="avatar-img rounded-circle border border-white"
+                                                    src="{{replies.user.avatar.url}}" alt="">
+                                            </a>
+                                        </div>
+                                        {% else %}
+                                        <div class="avatar avatar-xs rounded-circle bg-primary me-3">
+                                            <h6 class="text-white position-absolute top-50 start-50 translate-middle fw-bold">
+                                                <a class="text-white" href="">
+                                                    {% if replies.user.first_name %}
+                                                    {{replies.user.first_name|first}}{{replies.user.last_name|first}}
+                                                    {% else %}
+                                                    {{replies.user.username|first|upper}}
+                                                    {% endif %}
+                                                </a>
+                                            </h6>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="mb-2 d-sm-flex">
+                                                <h6 class="m-0 me-2">
+                                                    <a href="">
+                                                        @{{replies.user}}
+                                                    </a>
+                                                </h6>
+                                                <span class="me-3 small">{{replies.created|timesince}} </span>
+                                            </div>
+                                            <p>{{replies.body}} </p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% endfor %}
+                
+                
+                
+                
+                                    <!-- Comments END -->
+                                    {% if request.user.is_authenticated %}
+                                    <hr class="my-4">
+                                    <!-- Reply START -->
+                                    <div>
+                                        <h4>Add comment</h4>
+                                        <form method="post" action="" class="row g-3 mt-2 form-control">
+                                            {% csrf_token %}
+                                            <div class="col-12">
+                                                <label class="form-label">Your Comment *</label>
+                                                {{ comment_form.body|as_crispy_field }}
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary">Post comment</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {% else %}
+                                    <p>Please login than add comment. <a href="{% url 'blog:login' %}">Login page</a></p>
+                                    {% endif %}
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'footer.html' %}
